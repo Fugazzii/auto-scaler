@@ -1,10 +1,18 @@
-use actix_web::{get, App, HttpServer, Responder};
+use actix_web::{get, App, HttpServer, Responder, HttpResponse};
+use serde::Serialize;
 use std::env;
+
+#[derive(Serialize)]
+struct PingResponse {
+    data: String
+}
 
 #[get("/ping")]
 async fn ping() -> impl Responder {
-    format!("pong!\n")
+    HttpResponse::Ok()
+        .json(PingResponse { data: "pong!".to_string() })
 }
+
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
