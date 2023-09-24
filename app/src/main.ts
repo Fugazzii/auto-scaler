@@ -2,10 +2,10 @@
  * Entry file of the balancer
  */
 
-import { LoadBalancer } from "./balancer";
+import { AutoScaler } from "./auto-scaler";
 
 function main() {
-    const balancer = new LoadBalancer();
+    const balancer = new AutoScaler();
 
     balancer.init();
 }

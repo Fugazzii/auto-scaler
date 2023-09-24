@@ -1,5 +1,5 @@
 {
-  "name": "load-balancer",
+  "name": "auto-scaler",
   "module": "./src/main.ts",
   "type": "module",
   "devDependencies": {
