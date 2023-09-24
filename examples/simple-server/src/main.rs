@@ -1,3 +1,8 @@
+/**
+ * Simple server implementation with one GET route
+ */
+
+
 use actix_web::{get, App, HttpServer, Responder, HttpResponse};
 use serde::Serialize;
 use std::env;

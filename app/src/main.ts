@@ -1,13 +1,13 @@
 /**
- * Entry file of the balancer
+ * Entry file of the scaler
  */
 
 import { AutoScaler } from "./auto-scaler";
 
 function main() {
-    const balancer = new AutoScaler();
+    const scaler = new AutoScaler();
 
-    balancer.init();
+    scaler.init();
 }
 
 main();
