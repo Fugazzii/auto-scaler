@@ -1,3 +1,7 @@
+/**
+ * Entry file of the balancer
+ */
+
 import { LoadBalancer } from "./balancer";
 
 function main() {
