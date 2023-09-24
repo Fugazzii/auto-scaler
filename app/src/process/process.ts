@@ -11,7 +11,7 @@ export class Process {
 
     public constructor(
         private readonly params: ProcessParams,
-        private readonly childProcess: ChildProcess
+        private readonly process: ChildProcess
     ) {
         this.requestsInLastMinute = 0;
         this.requestsPerSecond = -1;
@@ -24,15 +24,18 @@ export class Process {
         }, 60 * 1000);
     }
 
-    public isOverloaded() { 
-        return this.minutesRunning > 2 && this.requestsPerSecond > 10;
-    }
+    public isOverloaded() { return this.minutesRunning > 2 && this.requestsPerSecond > 10; }
+    public isUnderloaded() { return this.minutesRunning > 2 && this.requestsInLastMinute < 3; }
 
     public increaseRequest() { this.requestsInLastMinute++; }
 
-    public get process() { return this.childProcess; }
     public get host() { return this.params.host; }
     public get port() { return this.params.port; }
+
+    public flush() { this.process.stdin.flush(); }
+    public end() { this.process.stdin.end(); }
+    public kill() { this.process.kill(); }
+    public write(str: string) { this.process.stdin.write(str); }
 
     private _handlerMinutePass() {
         if(this.requestsPerSecond === -1) return;
@@ -41,5 +44,6 @@ export class Process {
         this.requestsInLastMinute = 0;
         this.minutesRunning++;
     }
+
 
 }

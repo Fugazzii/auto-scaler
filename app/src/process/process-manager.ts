@@ -45,9 +45,9 @@ export class ProcessManager {
         }
 
         let lastProcess = this.processes.pop() as Process;
-        lastProcess.process.stdin.flush();
-        lastProcess.process.stdin.end();
-        lastProcess.process.kill();
+        lastProcess.flush();
+        lastProcess.end();
+        lastProcess.kill();
     }
 
     public getLastProcess() {
