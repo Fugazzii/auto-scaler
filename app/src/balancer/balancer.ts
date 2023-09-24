@@ -16,7 +16,7 @@ export class LoadBalancer {
         this._initializeProcesses();
 
         Bun.serve({
-            fetch(req, server) {
+            async fetch(req, server) {
                 // Get a child process from the manager
                 const process = LoadBalancer.manager.getLastProcess();
 
@@ -24,20 +24,22 @@ export class LoadBalancer {
                 if (process.isOverloaded()) {
                     LoadBalancer.manager.addProcess({
                         host: "localhost",
-                        port: "5000"
+                        port: "3000"
                     });
                 } else if(process.isUnderloaded()) {
                     LoadBalancer.manager.killProcess();
                 }
                                 
-                // Forward the request to the child process.
-                const childRequest = new Request(req.url, {
-                    method: req.method,
-                    headers: req.headers
+
+                const { protocol, hostname, pathname } = new URL(req.url);
+
+                const url = `${protocol}//${hostname}:${process.port}${pathname}`;
+
+                const response = await fetch(url, {
+                    headers: req.headers,
+                    method: req.method
                 });
-
-                process.write(childRequest.toString());
-
+                
                 // Return the response from the child process.
                 return new Response();
             },
