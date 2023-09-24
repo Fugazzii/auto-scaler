@@ -6,7 +6,7 @@ import { MIN_PROCESS_COUNT } from "../constants";
 type Port = { port: number, isOccupied: boolean };
 
 /**
- * Represents a load balancer that manages child processes.
+ * Represents a autoscaler that manages child processes.
  */
 export class AutoScaler {
 
@@ -26,7 +26,7 @@ export class AutoScaler {
     public constructor() {}
 
     /**
-     * Initializes the load balancer.
+     * Initializes the autoscaler.
      */
     public init() {
         // Initialize the minimum number of processes
