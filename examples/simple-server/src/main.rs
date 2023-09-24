@@ -2,7 +2,7 @@ use actix_web::{get, App, HttpServer, Responder};
 
 #[get("/ping")]
 async fn greet() -> impl Responder {
-    format!("pong!")
+    format!("pong!\n")
 }
 
 #[actix_web::main]
