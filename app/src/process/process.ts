@@ -32,10 +32,10 @@ export class Process {
     public get host() { return this.params.host; }
     public get port() { return this.params.port; }
 
-    public flush() { this.process.stdin.flush(); }
-    public end() { this.process.stdin.end(); }
+    public flush() { return this.process.stdin.flush(); }
+    public end() { return this.process.stdin.end(); }
     public kill() { this.process.kill(); }
-    public write(str: string) { this.process.stdin.write(str); }
+    public write(str: string) { return this.process.stdin.write(str); }
 
     private _handlerMinutePass() {
         if(this.requestsPerSecond === -1) return;

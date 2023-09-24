@@ -11,9 +11,13 @@ export class LoadBalancer {
     public constructor() {}
 
     public init() {
+
+        // Initialize minimum number of processes
+        this._initializeProcesses();
+
         Bun.serve({
             fetch(req, server) {
-                // Get a child process from the manager.
+                // Get a child process from the manager
                 const process = LoadBalancer.manager.getLastProcess();
 
                 // If the child process is overloaded, start a new child process.
@@ -22,6 +26,8 @@ export class LoadBalancer {
                         host: "localhost",
                         port: "5000"
                     });
+                } else if(process.isUnderloaded()) {
+                    LoadBalancer.manager.killProcess();
                 }
                                 
                 // Forward the request to the child process.
@@ -38,5 +44,14 @@ export class LoadBalancer {
             hostname: "localhost",
             port: 5000
         });
+    }
+
+    private _initializeProcesses() {
+        for(let i = 0; i < 1; i++) {
+            LoadBalancer.manager.addProcess({
+                host: "localhost",
+                port: String(3000 + i)
+            });
+        }
     }
 }
