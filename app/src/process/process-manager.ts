@@ -20,7 +20,6 @@ export class ProcessManager {
     }
 
     public addProcess({ host, port } : ProcessParams) {
-
         if(this.processes.length === this.maxProcessCount) {
             console.log(`You can not run more than ${this.maxProcessCount} processes`);
             return;
@@ -36,6 +35,7 @@ export class ProcessManager {
         const process = new Process({ host, port }, bunProcess);
 
         this.processes.push(process);
+        process.run();
     }
 
     public killProcess() {
@@ -53,8 +53,6 @@ export class ProcessManager {
         return Number(port);
     }
 
-    public getLastProcess() {
-        return this.processes[this.processes.length - 1];
-    }
+    public getLastProcess() { return this.processes[this.processes.length - 1]; }
 
 }

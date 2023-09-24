@@ -26,6 +26,8 @@ export class LoadBalancer {
                 // Get a child process from the manager
                 const process = LoadBalancer.manager.getLastProcess();
 
+                process.increaseRequest();
+
                 // If the child process is overloaded, start a new child process.
                 if (process.isOverloaded()) {
                     LoadBalancer._addProcess();

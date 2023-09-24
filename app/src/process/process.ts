@@ -4,7 +4,6 @@ export type ProcessParams = { host: string, port: string };
 type ChildProcess = Subprocess<"pipe", "pipe", "inherit">;
 
 export class Process {
-    
     private requestsInLastMinute: number;
     private requestsPerSecond: number;
     private minutesRunning: number;
@@ -20,8 +19,9 @@ export class Process {
 
     public run() {
         setInterval(() => {
+            console.log(this.requestsInLastMinute, this.requestsPerSecond, this.minutesRunning);
             this._handlerMinutePass();
-        }, 60 * 1000);
+        }, 3 * 1000);    
     }
 
     public isOverloaded() { return this.minutesRunning > 2 && this.requestsPerSecond > 10; }
@@ -38,7 +38,7 @@ export class Process {
     public write(str: string) { return this.process.stdin.write(str); }
 
     private _handlerMinutePass() {
-        if(this.requestsPerSecond === -1) return;
+        if(this.requestsInLastMinute === -1) return;
 
         this.requestsPerSecond = this.requestsInLastMinute / 60;
         this.requestsInLastMinute = 0;
