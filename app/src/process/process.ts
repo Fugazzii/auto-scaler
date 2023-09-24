@@ -21,7 +21,7 @@ export class Process {
         setInterval(() => {
             console.log(this.requestsInLastMinute, this.requestsPerSecond, this.minutesRunning);
             this._handlerMinutePass();
-        }, 3 * 1000);    
+        }, 60 * 1000);    
     }
 
     public isOverloaded() { return this.minutesRunning > 2 && this.requestsPerSecond > 10; }
