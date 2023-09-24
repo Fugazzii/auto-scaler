@@ -1,11 +1,12 @@
 import { Subprocess, spawn } from "bun";
+import { ProcessParams } from ".";
+import { Process } from ".";
 
-type ProcessParams = { host: string, port: string };
-type ChildProcess = Subprocess<"pipe", "pipe", "inherit">;
+type ManagerParams = { minProcesses: number, maxProcesses: number };
 
 export class ProcessManager {
     
-    private readonly processes: Array<ChildProcess>;
+    private readonly processes: Array<Process>;
 
     private constructor(
         private minProcessCount = 1,
@@ -14,8 +15,8 @@ export class ProcessManager {
         this.processes = [];
     }
 
-    public static create(minProc: number, maxProc: number) {
-        return new ProcessManager(minProc, maxProc);
+    public static create({ minProcesses, maxProcesses }: ManagerParams) {
+        return new ProcessManager(minProcesses, maxProcesses);
     }
 
     public addProcess({ host, port } : ProcessParams) {
@@ -27,10 +28,12 @@ export class ProcessManager {
 
         const path = "/home/ilia/Desktop/Node/load-balancer/examples/simple-server/target/debug/simple-server";
 
-        let process = spawn([path, host, port], {
+        const bunProcess = spawn([path, host, port], {
             stdin: "pipe",
             stdout: "pipe"
         });
+
+        const process = new Process({ host, port }, bunProcess);
 
         this.processes.push(process);
     }
@@ -41,10 +44,14 @@ export class ProcessManager {
             return;
         }
 
-        let lastProcess = this.processes.pop() as ChildProcess;
-        lastProcess.stdin.flush();
-        lastProcess.stdin.end();
-        lastProcess.kill();
+        let lastProcess = this.processes.pop() as Process;
+        lastProcess.process.stdin.flush();
+        lastProcess.process.stdin.end();
+        lastProcess.process.kill();
+    }
+
+    public getLastProcess() {
+        return this.processes[this.processes.length - 1];
     }
 
 }
