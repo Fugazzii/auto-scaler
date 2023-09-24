@@ -1,5 +1,8 @@
 import Bun from "bun";
 import { ProcessManager } from "../process";
+import { MAX_PROCESS_COUNT, MIN_PROCESS_COUNT } from "../constants";
+
+type Port = { port: number, isOccupied: boolean };
 
 export class LoadBalancer {
     
@@ -8,6 +11,9 @@ export class LoadBalancer {
         maxProcesses: 5
     });
     
+    private static avalaiblePorts: Array<Port> = new Array<Port>()
+        .map((currentPort: Port, idx: number) => currentPort = { port: 3000 + idx, isOccupied: false} );
+
     public constructor() {}
 
     public init() {
@@ -22,12 +28,9 @@ export class LoadBalancer {
 
                 // If the child process is overloaded, start a new child process.
                 if (process.isOverloaded()) {
-                    LoadBalancer.manager.addProcess({
-                        host: "localhost",
-                        port: "3000"
-                    });
+                    LoadBalancer._addProcess();
                 } else if(process.isUnderloaded()) {
-                    LoadBalancer.manager.killProcess();
+                    LoadBalancer._removeProcess();
                 }
                                 
 
@@ -43,6 +46,7 @@ export class LoadBalancer {
                 const data = await response.json();
 
                 console.log(data);
+
                 // Return the response from the child process.
                 return new Response(data);
             },
@@ -58,5 +62,28 @@ export class LoadBalancer {
                 port: String(3000 + i)
             });
         }
+    }
+
+    private static _addProcess() {
+        let avalaiblePort = LoadBalancer.avalaiblePorts.find((currentPort: Port) => currentPort.isOccupied = true);
+        
+        if(!avalaiblePort) return null;
+
+        LoadBalancer.manager.addProcess({
+            host: "localhost",
+            port: avalaiblePort.port.toString()
+        });
+
+        avalaiblePort.isOccupied = true;
+    }
+
+    private static _removeProcess() {
+        let lastProcessPort = LoadBalancer.manager.killProcess();
+
+        if(lastProcessPort === -1) return;
+
+        const targetPort = LoadBalancer.avalaiblePorts.find((currentPort: Port) => currentPort.port = lastProcessPort);
+    
+        targetPort!.isOccupied = false;
     }
 }

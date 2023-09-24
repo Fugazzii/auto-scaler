@@ -41,13 +41,16 @@ export class ProcessManager {
     public killProcess() {
         if(this.processes.length === this.minProcessCount) {
             console.log(`You can not run less than ${this.minProcessCount} processes`);
-            return;
+            return -1;
         }
 
         let lastProcess = this.processes.pop() as Process;
+        const { port } = lastProcess;
         lastProcess.flush();
         lastProcess.end();
         lastProcess.kill();
+
+        return Number(port);
     }
 
     public getLastProcess() {
