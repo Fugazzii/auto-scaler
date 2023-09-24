@@ -74,6 +74,8 @@ export class LoadBalancer {
             port: avalaiblePort.port.toString()
         });
 
+        console.log(`Occupying port: ${avalaiblePort}`);
+
         avalaiblePort.isOccupied = true;
     }
 
@@ -83,7 +85,9 @@ export class LoadBalancer {
         if(lastProcessPort === -1) return;
 
         const targetPort = LoadBalancer.avalaiblePorts.find((currentPort: Port) => currentPort.port = lastProcessPort);
-    
+
+        console.log(`Freeing port: ${targetPort}`);
+
         targetPort!.isOccupied = false;
     }
 }
