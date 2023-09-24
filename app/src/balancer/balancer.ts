@@ -40,8 +40,11 @@ export class LoadBalancer {
                     method: req.method
                 });
                 
+                const data = await response.json();
+
+                console.log(data);
                 // Return the response from the child process.
-                return new Response();
+                return new Response(data);
             },
             hostname: "localhost",
             port: 5000
